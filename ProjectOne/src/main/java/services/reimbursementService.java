@@ -8,9 +8,9 @@ import Models.Status;
 import mockData.*;
 
 public class reimbursementService {
-	List<Reimbursement> reimbursements = MockReimbursementData.getReimbursements();
+	static List<Reimbursement> reimbursements = MockReimbursementData.getReimbursements();
 	
-	public void update(Reimbursement unprocessedReimbursement, int resolverId, Status updatedStatus)           
+	public static void update(Reimbursement unprocessedReimbursement, int resolverId, Status updatedStatus)           
 	{
 		for(Reimbursement reimbursement: reimbursements) 
 		{
@@ -24,7 +24,7 @@ public class reimbursementService {
 		throw new RuntimeException("There was an error processing this reimbursement, please try again");
 	}
 	
-	public void submitReimbursement(Reimbursement reimbursmentToBeSubmitted) 
+	public static void submitReimbursement(Reimbursement reimbursmentToBeSubmitted) 
 	{
 		Reimbursement latestReimbursement = reimbursements.get(reimbursements.size()-1);
 		int id = latestReimbursement.getId() + 1;
@@ -33,7 +33,7 @@ public class reimbursementService {
 		reimbursmentToBeSubmitted.setStatus(Status.PENDING);
 		reimbursements.add(reimbursmentToBeSubmitted);
 	}
-	public List<Reimbursement> getResolvedReimbursements()
+	public static List<Reimbursement> getResolvedReimbursements()
 	{
 		List<Reimbursement> resolvedReimbursements = new ArrayList<Reimbursement>();
 		for (Reimbursement reimbursement : reimbursements) 
@@ -46,7 +46,7 @@ public class reimbursementService {
 		return resolvedReimbursements;
 	}
 	
-	public List<Reimbursement> getPendingReimbursements()
+	public static List<Reimbursement> getPendingReimbursements()
 	{
 		List<Reimbursement> pendingReimbursements = new ArrayList<Reimbursement>();
 		for (Reimbursement reimbursement : reimbursements) 
@@ -59,19 +59,22 @@ public class reimbursementService {
 		return pendingReimbursements;
 	}
 	
-	public Reimbursement getReimbursementById(int Id) 
+	public static Reimbursement getReimbursementById(int[] selection) 
 	{
 		for(Reimbursement reimbursement : reimbursements) 
 		{
-			if(reimbursement.getId() == Id) 
+			for(int i = 0 ; i <selection.length; i++) 
 			{
-				return reimbursement;
+				if(selection[i] == reimbursement.getId()) 
+				{
+					return reimbursement;
+				}
 			}
 		}
 		return null;
 	}
 	
-	public List<Reimbursement> getReimbursementByAuthor(int userId)
+	public static List<Reimbursement> getReimbursementByAuthor(int userId)
 	{
 		List<Reimbursement> userReimbursement = new ArrayList<Reimbursement>();
 		
