@@ -4,88 +4,78 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Models.Reimbursement;
+import Models.Role;
 import Models.Status;
-import mockData.*;
+import Models.User;
+import repositories.ReimbursementDAO;
 
 public class reimbursementService {
-	static List<Reimbursement> reimbursements = MockReimbursementData.getReimbursements();
 	
-	public static void update(Reimbursement unprocessedReimbursement, int resolverId, Status updatedStatus)           
-	{
-		for(Reimbursement reimbursement: reimbursements) 
-		{
-			if(reimbursement.getId() == unprocessedReimbursement.getId()) 
-			{
-				reimbursement.setResolver(resolverId);
-				reimbursement.setStatus(updatedStatus);
-				return;
-			}
-		}
-		throw new RuntimeException("There was an error processing this reimbursement, please try again");
-	}
+	static ReimbursementDAO rDAO = new ReimbursementDAO();
+	userService uService = new userService();
 	
-	public static void submitReimbursement(Reimbursement reimbursmentToBeSubmitted) 
+	public static List<Reimbursement> getPendingReimbursement()
 	{
-		Reimbursement latestReimbursement = reimbursements.get(reimbursements.size()-1);
-		int id = latestReimbursement.getId() + 1;
+		return rDAO.getByStatus(Status.PENDING);
 		
-		reimbursmentToBeSubmitted.setId(id);
-		reimbursmentToBeSubmitted.setStatus(Status.PENDING);
-		reimbursements.add(reimbursmentToBeSubmitted);
-	}
-	public static List<Reimbursement> getResolvedReimbursements()
-	{
-		List<Reimbursement> resolvedReimbursements = new ArrayList<Reimbursement>();
-		for (Reimbursement reimbursement : reimbursements) 
-		{
-			if(reimbursement.getStatus() == Status.APPROVED ||reimbursement.getStatus() == Status.DENIED) 
-			{
-				resolvedReimbursements.add(reimbursement);
-			}
-		}
-		return resolvedReimbursements;
 	}
 	
-	public static List<Reimbursement> getPendingReimbursements()
+	public static List<Reimbursement> getResolvedReimbursement()
 	{
-		List<Reimbursement> pendingReimbursements = new ArrayList<Reimbursement>();
-		for (Reimbursement reimbursement : reimbursements) 
-		{
-			if(reimbursement.getStatus() == Status.PENDING) 
-			{
-				pendingReimbursements.add(reimbursement);
-			}
-		}
-		return pendingReimbursements;
+		List<Reimbursement> resolvedReimbursement = new ArrayList<Reimbursement>();
+		
+		resolvedReimbursement.addAll(rDAO.getByStatus(Status.APPROVED));
+		resolvedReimbursement.addAll(rDAO.getByStatus(Status.DENIED));
+		
+		return resolvedReimbursement;
 	}
 	
-	public static Reimbursement getReimbursementById(int[] selection) 
+	public static int submitReimbursement(Reimbursement reimbursementToBeSubmitted) 
 	{
-		for(Reimbursement reimbursement : reimbursements) 
+		User employee = userService.getUserById(reimbursementToBeSubmitted.getAuthor());
+		
+		if(employee.getRole() != Role.EMPLOYEE) 
 		{
-			for(int i = 0 ; i <selection.length; i++) 
-			{
-				if(selection[i] == reimbursement.getId()) 
-				{
-					return reimbursement;
-				}
-			}
+			throw new IllegalArgumentException("Managers can not submit reimbursement requests.");
+			
 		}
-		return null;
+		else 
+		{
+			reimbursementToBeSubmitted.setStatus(Status.PENDING);
+			
+			return rDAO.create(reimbursementToBeSubmitted);
+		}
+	}
+	
+	public static Reimbursement update(Reimbursement unprocessedReimbursement, int resolverID, Status updatedStatus) 
+	{
+		User manager = userService.getUserById(resolverID);
+		
+		if(manager.getRole() != Role.MANAGER) 
+		{
+			throw new IllegalArgumentException("An employee can not process reimbursement requests.");
+		}
+		else 
+		{
+			unprocessedReimbursement.setResolver(resolverID);
+			unprocessedReimbursement.setStatus(updatedStatus);
+			
+			rDAO.update(unprocessedReimbursement);
+			
+			return unprocessedReimbursement;
+		}
+	}
+	
+	public static Reimbursement getReimbursementById(int id) 
+	{
+		return rDAO.getReimbursementById(id);
 	}
 	
 	public static List<Reimbursement> getReimbursementByAuthor(int userId)
 	{
-		List<Reimbursement> userReimbursement = new ArrayList<Reimbursement>();
-		
-		for(Reimbursement r: reimbursements) 
-		{
-			if(r.getAuthor() == userId || r.getResolver() == userId) 
-			{
-				userReimbursement.add(r);
-			}
-		}
-		return userReimbursement;
+		return rDAO.getReimbursementsByUser(userId);
 	}
+	
+	
 
 }

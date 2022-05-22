@@ -1,74 +1,118 @@
 package services;
 
-import java.util.ArrayList;
+
+
 import java.util.List;
-
 import java.util.Scanner;
-
 import Models.Reimbursement;
 import Models.Role;
 import Models.Status;
 import Models.User;
 import Models.reimbursementType;
-import services.userService;
-import services.reimbursementService;
 
 public class menuService {
-	public void displayMenu() 
+	reimbursementService rServ = new reimbursementService();
+	static Scanner scan = new Scanner(System.in);
+	
+	@SuppressWarnings("static-access")
+	public void displayLogInMenu() 
 	{
-		
+		authService au = new authService();
+	    boolean accountFound = false;
+	    
 		System.out.println("------------------------------------------------");
-		System.out.println("Welcome to the Revature Reimbursement System");
+		System.out.println("Welcome to the Revature's Portal");
 		System.out.println("------------------------------------------------");
 		System.out.println();
 		
-		Scanner scan = new Scanner(System.in);
-		int firstChoice = -1;
-		firstChoice = scan.nextInt();
+		 while(accountFound != true) {
+		       System.out.println("Enter your Username");
+		       String username = scan.nextLine();
+		       System.out.println("Enter your password");
+		       String password = scan.nextLine();
+		       if (au.login(username, password)!= null) {
+		           accountFound = true;
+		           displayMenu();
+		           break;
+		       }
+		       else
+		       {
+		           System.out.println("Account not found, please re-enter username and password");
+		       }
+		 }
+	}
+	@SuppressWarnings("static-access")
+	public void displayRegisterMenu() 
+	{
+
+	    authService au = new authService();
+
+
+	    System.out.println("~~~~~~~~~~~");
+	    System.out.println("Welcome to the Registration Portal");
+	    System.out.println("~~~~~~~~~~");
+	    System.out.println();
+
+	    User userToBeRegistered = new User();
+	    System.out.println("Please enter your username");
+	    String username = scan.nextLine();
+	    System.out.println("Please enter a password");
+	    String password = scan.nextLine();
+	    userToBeRegistered.setUserName(username);
+	    userToBeRegistered.setPassWord(password);
+	    userToBeRegistered.setRole(Role.EMPLOYEE);
+	    au.register(userToBeRegistered);
+	    displayLogInMenu();
+	} 
+
+	public void displayMenu() 
+	{
+		boolean menuOptions = true;
+		System.out.println("------------------------------------------------");
+		System.out.println("Welcome to the Revature Reimbursement System");
+		System.out.println("------------------------------------------------");
 		
-		while(firstChoice != 0) 
+		
+		
+		while(menuOptions) 
 		{
+
 			System.out.println("PLEASE ENTER YOUR NUMBER OF CHOICE");
 			System.out.println("1 -> Employee Portal");
 			System.out.println("2 -> Finance Manger Portal");
-			System.out.println("0-> Exit Application");
-		
-			switch(firstChoice) 
-			{
-				case 1:
-					//displayEmployeeMenu();
-					//need to pass in an employee;
-					break;
-				case 2:
-					//displayFinanceManagerMenu();
-					//need to pass a manager 
-					break;
-				case 0:
-					System.out.println("exit");
-					break;
-				default:
-					System.out.println("Input recieved was not a valid option, please try again");
-					break;
-			}
-			displayMenu();
-			firstChoice = scan.nextInt();
+			System.out.println("0 -> Exit Application");
+			int firstChoice = promptSelection(1,2,0);
+	
+				switch(firstChoice) 
+				{
+					case 1:
+						handlePortal(Role.EMPLOYEE);
+						break;
+					case 2:
+						handlePortal(Role.MANAGER);
+						break;
+					case 0:
+						System.out.println("exit");
+						menuOptions = false;
+						break;
+					
+				}
+
 		}
-		scan.close();
-		
+			
 	}
 	
 	public void displayFinanceManagerMenu(User manager) 
 	{
+		boolean manangerPortal = true;
+		
 		System.out.println("------------------------------------------------");
 		System.out.println("Welcome to the Manager Processing Portal," + manager.getUserName());
 		System.out.println("------------------------------------------------");
 		System.out.println();
 		
-		Scanner scan = new Scanner(System.in);
-		int firstChoice = -1;
-		firstChoice = scan.nextInt();
 		
-		while(firstChoice != 0 ) 
+		while(manangerPortal) 
 		{
 			System.out.println("PLEASE ENTER THE NUMBER OF YOUR CHOICE");
 			System.out.println("1 -> View all Pending Reimbursements");
@@ -76,7 +120,7 @@ public class menuService {
 			System.out.println("3 -> Process a Reimbursement");
 			System.out.println("0 -> Return to Main Menu");
 			
-			
+			int firstChoice = promptSelection(1,2,3,0);
 			
 			switch(firstChoice) 
 			{
@@ -91,35 +135,31 @@ public class menuService {
 					break;
 				case 0:
 					System.out.println("Returning to Main Menu...");
-					break;
-				default:
-					System.out.println("Input recieved was not a valid option, please try again");
+					manangerPortal = false;
 					break;
 			}
-			displayFinanceManagerMenu(manager);
-			firstChoice= scan.nextInt();
 		}
-		scan.close();
 	}
 	
 	public void displayEmployeeMenu(User employee) 
 	{
+		boolean empPortal = true;
 		
 		System.out.println("------------------------------------------------");
 		System.out.println("Welcome to the Employee Portal," + employee.getUserName());
 		System.out.println("------------------------------------------------");
 		System.out.println();
 		
-		Scanner scan = new Scanner(System.in);
-		int firstChoice = -1;
-		firstChoice = scan.nextInt();
 		
-		while(firstChoice != 0 ) 
+		
+		while(empPortal) 
 		{
 			System.out.println("PLEASE ENTER THE NUMBER OF YOUR CHOICE");
 			System.out.println("1 -> View Previous Requests");
 			System.out.println("2 -> Submit a Reimbursement");
 			System.out.println("0 -> Return to Main Menu");
+			
+			int firstChoice = promptSelection(1,2,0);
 			
 			switch(firstChoice) 
 			{
@@ -131,55 +171,21 @@ public class menuService {
 					break;
 				case 0:
 					System.out.println("Returning to Main Menu...");
-					break;
-				default:
-					System.out.println("Input recieved was not a valid option, please try again");
+					empPortal = false;
 					break;
 			}
-			displayEmployeeMenu(employee);
-			firstChoice = scan.nextInt();
-			
 		}
-		scan.close();
-		
-	
 	}
-//	public int promptSelection(int ...validEntries) 
-//	{
-//		int input;
-//		boolean valid = false;
-//		
-//		do 
-//		{
-//			input = parseIntegerInput(fetchInput());
-//			for (int entry : validEntries) 
-//			{
-//				if(entry == input) 
-//				{
-//					valid = true;
-//					break;
-//				}
-//				
-//			}
-//			if(!valid) 
-//			{
-//				System.out.println("Input recieved was not a valid option, please try again");
-//			}
-//		}
-//		while(!valid);
-//		return input;
-//	}
-//	
-	public String fetchInput() 
+	
+	public static String fetchInput() 
 	{
-		Scanner scan = new Scanner(System.in);
 		String amount = "";
 		amount = scan.nextLine();
-		scan.close();
+		//scan.close();
 		return amount.split(" ")[0];
 		
 	}
-	public int parseIntegerInput(String input) 
+	public static int parseIntegerInput(String input) 
 	{
 		try 
 		{
@@ -215,34 +221,22 @@ public class menuService {
 		System.out.println("3 -> Food");
 		System.out.println("4 -> Other");
 		
-		Scanner scan = new Scanner(System.in);
-		int typeDecision= -1;
-		typeDecision = scan.nextInt();
-		
-		while(typeDecision != 5) 
+		int typeDecision = promptSelection(1,2,3,4);
+		switch(typeDecision) 
 		{
-			switch(typeDecision) 
-			{
-				case 1: 
-					reimbursementToBeSubmitted.setType(reimbursementType.LODGING);
-					break;
-				case 2:
-					reimbursementToBeSubmitted.setType(reimbursementType.TRAVEL);
-					break;
-				case 3:
-					reimbursementToBeSubmitted.setType(reimbursementType.FOOD);
-					break;
-				case 4:
-					reimbursementToBeSubmitted.setType(reimbursementType.OTHER);
-					break;
-				default:
-					System.out.println("Invalid option. Please choose again");
-					break;
-			}
-			submitReimbursement(employee);
-			typeDecision = scan.nextInt();
+			case 1:
+				reimbursementToBeSubmitted.setType(reimbursementType.LODGING);
+				break;
+			case 2:
+				reimbursementToBeSubmitted.setType(reimbursementType.TRAVEL);
+				break;
+			case 3:
+				reimbursementToBeSubmitted.setType(reimbursementType.FOOD);
+				break;
+			case 4:
+				reimbursementToBeSubmitted.setType(reimbursementType.OTHER);
+				break;
 		}
-		
 		
 		System.out.println("Please enter the dollar amount you are requesting to be reimbursed: ");
 		System.out.println("$");
@@ -284,8 +278,10 @@ public class menuService {
 		
 	}
 	
+	@SuppressWarnings({ "static-access" })
 	public void processReimbursement(User MANAGER) 
 	{
+		
 		boolean processPortal = true;
 		System.out.println("------------------------------------------------");
 		System.out.println("Welcome to the Manager Processing Portal," + MANAGER.getUserName());
@@ -294,7 +290,7 @@ public class menuService {
 		
 		while(processPortal) 
 		{
-			List<Reimbursement> reimbursements = reimbursementService.getPendingReimbursements();
+			List<Reimbursement> reimbursements = reimbursementService.getPendingReimbursement();
 			if(reimbursements.isEmpty()) 
 			{
 				System.out.println("There are no reimbursements to process.");
@@ -313,7 +309,7 @@ public class menuService {
 			
 			System.out.println("please enter the ID of the Reimbursement you wish to process");
 			
-			int[] selection = ids;
+			int selection = promptSelection(ids);
 			Reimbursement reimbursementToBeProcessed = reimbursementService.getReimbursementById(selection);
 			System.out.println("Processinhg reimbursement #" + reimbursementToBeProcessed.getId());
 			System.out.println("Details\nAuthor: " 
@@ -321,57 +317,27 @@ public class menuService {
 					+"\nAmount: " + reimbursementToBeProcessed.getAmount()
 					+"\nDescription: " + reimbursementToBeProcessed.getDescription()
 			);
-			
-			
-			
-			Scanner scan = new Scanner(System.in);
-			int decision = 0;
-			decision = scan.nextInt();
-			while(decision!= 0 ) 
-			{
+
+				
 				System.out.println("PLEASE ENTER THE NUMBER OF YOUR CHOICE");
 				System.out.println(" 1 -> Approve");
 				System.out.println("2 -> Deny");
 				
-				if(decision == 1) 
-				{
-					Status status = (decision == 1 )? Status.APPROVED : Status.DENIED;
-					reimbursementService.update(reimbursementToBeProcessed, MANAGER.getUser_ID(), status);
-					break;
-				}
-				else if(decision == 2) 
-				{
-					Status status = (decision == 2 )? Status.APPROVED : Status.DENIED;
-					reimbursementService.update(reimbursementToBeProcessed, MANAGER.getUser_ID(), status);
-					break;
-				}
-				scan.close();
-			}
+				int decision = promptSelection(1,2);
+				Status status = (decision == 1)? Status.APPROVED : Status.DENIED;
+				rServ.update(reimbursementToBeProcessed, MANAGER.getUser_ID(), status);
+		
 			
-			
-			Scanner scan1 = new Scanner(System.in);
-			int lastChoice = 0;
-			lastChoice = scan1.nextInt();
-			
-			while(lastChoice!= 2) 
-			{
 				System.out.println("Would you like to process another reimbursement?");
 				System.out.println("PLEASE ENTER THE NUMBER OF YOUR CHOICE");
 				System.out.println("1 -> Yes");
 				System.out.println("2 -> No");
 				
-				switch(lastChoice) 
+				int lastChoice = promptSelection(1,2);
+				if(lastChoice == 2) 
 				{
-					case 1:
-						processReimbursement(MANAGER);
-						break;
-					case 2:
-						System.out.println("Now exiting");
-						break;
+					processPortal = false;
 				}
-				scan1.close();
-			}
-			
 		}
 		
 	}
@@ -395,22 +361,13 @@ public class menuService {
 			System.out.println(u.getUser_ID()+ "->" + u.getUserName());
 		}
 		
-		Scanner scan2 = new Scanner(System.in);
-		int userChoice = -1;
-		userChoice = scan2.nextInt();
-		while(userChoice!= 0) 
+		System.out.println("0 -> Return to Main Menu");
+		System.out.println();
+		int userChoice = promptSelection(ids);
+		if(userChoice == 0) 
 		{
-			System.out.println("0 -> Return to Main Menu");
-			System.out.println();
-			if(userChoice == 0) 
-			{
-				break;
-			}
-			scan2.close();
-		}	
-		
-		
-	
+			return;
+		}
 		User employee = userService.getUserById(userChoice);
 		
 		if(role == Role.MANAGER) 
@@ -427,7 +384,7 @@ public class menuService {
 	
 	public void displayPendingReimbursements() 
 	{
-		List<Reimbursement> pendingReimbursements = reimbursementService.getPendingReimbursements();
+		List<Reimbursement> pendingReimbursements = reimbursementService.getPendingReimbursement();
 		
 		if(pendingReimbursements.isEmpty()) 
 		{
@@ -442,7 +399,7 @@ public class menuService {
 	
 	public void displayResolvedReimbursements() 
 	{
-		List<Reimbursement> resolvedReimbursements = reimbursementService.getResolvedReimbursements();
+		List<Reimbursement> resolvedReimbursements = reimbursementService.getResolvedReimbursement();
 		
 		if(resolvedReimbursements.isEmpty()) 
 		{
@@ -470,6 +427,22 @@ public class menuService {
 		}
 	}
 	
-	
+	public static int promptSelection(int ...validEntries) {
+        int input;
+        boolean valid = false;
 
+        do {
+            input = parseIntegerInput(fetchInput());
+            for(int entry : validEntries) {
+                if(entry == input) {
+                    valid = true;
+                    break;
+                }
+            }
+            if(!valid) {
+                System.out.println("Input recieved was not a valid option, please try again.");
+            }
+        } while(!valid);
+        return input;
+    }
 }

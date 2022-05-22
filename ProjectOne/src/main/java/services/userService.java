@@ -3,64 +3,54 @@ package services;
 import java.util.ArrayList;
 import java.util.List;
 
-import Models.*;
+import Models.Role;
+import Models.User;
+import repositories.UserDAO;
 
 public class userService {
 	
-	static List<User> users = new ArrayList<User>();
-	
+	static UserDAO uDAO = new UserDAO();
 	
 	public static User getUserById(int author) 
 	{
-		for(User user : users) 
-		{
-			if(user.getUser_ID() == author ) 
-			{
-				return user;
-			}
-		}
-		return null;
+		return (User) uDAO.getUserById(author);
 	}
 	
-	public static List<User> getByRole(Role role) 
+	@SuppressWarnings("static-access")
+	public static User getByUserName(String username)
 	{
-		for(User user :users) 
-		{
-			if(user.getRole() == role) 
-			{
-				users.add(user);
-			}
-		}
-		return users;
-		
-	}
-	public User getUserByUserName(String username) 
-	{
-		for(User user : users) 
-		{
-			if(user.getUserName().equals(username)) 
-			{
-				return user;
-			}
-		}
-		return null;
+		return (User) uDAO.getUserByUserName(username);
 	}
 	
-	public List<User> getAllUsers(List<User> users)
+	public static List<User> getAllUsers()
 	{
-		return users;
+		return uDAO.getAllUsers();
 	}
 	
 	public void idExists(int id) 
 	{
-		for(User user : users) 
+		for(User user : uDAO.getAllUsers()) 
 		{
 			if(user.getUser_ID() == id) 
 			{
-				System.out.println("This ID exists already");
+				System.out.println("This user exists");
 				break;
 			}
 		}
+		System.out.println("This user does not exists");
 	}
 	
+	public static List<User> getByRole(Role role)
+	{
+		List<User> roles = new ArrayList<>();
+		
+		for(User user : uDAO.getAllUsers()) 
+		{
+			if(user.getRole() == role) 
+			{
+				roles.add(user);
+			}
+		}
+		return roles;
+	}	
 }
