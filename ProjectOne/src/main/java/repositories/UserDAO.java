@@ -1,8 +1,6 @@
 package repositories;
 
 import java.sql.Connection;
-
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +15,7 @@ import utilities.ConnectionFactoryUtility;
 public class UserDAO {
 	
 	
-	public List<User> getUserById(int id) 
+	public User getUserById(int id) 
 	{
 		try(Connection connection = ConnectionFactoryUtility.getConnection())
 		{
@@ -29,19 +27,28 @@ public class UserDAO {
 			
 			ResultSet rs = prepStatement.executeQuery();
 			
-			List<User> userList = new ArrayList<User>();
+//			List<User> userList = new ArrayList<User>();
 			
-			while(rs.next()) 
-			{
-				User u = new User(
-						rs.getInt("id"),
-						rs.getString("username"),
-						rs.getString("password"),
-						Role.valueOf(rs.getString("role"))
+//			while(rs.next()) 
+//			{
+//				User u = new User(
+//						rs.getInt("id"),
+//						rs.getString("username"),
+//						rs.getString("password"),
+//						Role.valueOf(rs.getString("role"))
+//						);
+//				userList.add(u);
+//			}
+//			return userList;
+			if (rs.next()) {
+				return new User(
+					rs.getInt("id"),	
+					rs.getString("username"),
+					rs.getString("password"),
+					Role.valueOf(rs.getString("role"))						
 						);
-				userList.add(u);
 			}
-			return userList;
+
 
 		}
 		catch(SQLException e) 
@@ -81,7 +88,7 @@ public class UserDAO {
 				User user = userList.get(0);
 				return user;
 			}
-			catch(NullPointerException e) 
+			catch(IndexOutOfBoundsException e) 
 			{
 				System.out.println("No existing user");
 				return null;
@@ -138,7 +145,7 @@ public class UserDAO {
 			
 			prepStatement.setString(1,newUser.getUserName());
 			prepStatement.setString(2, newUser.getPassWord());
-			prepStatement.setObject(3, newUser.getRole());
+			prepStatement.setObject(3, newUser.getRole().toString());
 			
 			ResultSet rs;
 			

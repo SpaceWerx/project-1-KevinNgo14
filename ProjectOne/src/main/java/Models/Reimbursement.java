@@ -9,7 +9,7 @@ public class Reimbursement {
 	private reimbursementType type;
 	//status
 	private Status status;
-	private Double amount;
+	private double amount;
 
 	public Reimbursement() {
 		super();
@@ -17,7 +17,7 @@ public class Reimbursement {
 	}
 
 	public Reimbursement(int id, int author, int resolver, String description,reimbursementType type, Status status,
-			Double amount) {
+			double amount) {
 		super();
 		this.id = id;
 		this.author = author;
@@ -28,55 +28,7 @@ public class Reimbursement {
 		this.amount = amount;
 	}
 
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((amount == null) ? 0 : amount.hashCode());
-		result = prime * result + author;
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + id;
-		result = prime * result + resolver;
-		result = prime * result + ((status == null) ? 0 : status.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Reimbursement other = (Reimbursement) obj;
-		if (amount == null) {
-			if (other.amount != null)
-				return false;
-		} else if (!amount.equals(other.amount))
-			return false;
-		if (author != other.author)
-			return false;
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
-			return false;
-		if (id != other.id)
-			return false;
-		if (resolver != other.resolver)
-			return false;
-		if (status != other.status)
-			return false;
-		if (type != other.type)
-			return false;
-		return true;
-	}
-
-
-	@Override
+	
 	public String toString() {
 		return "Reimbursement [id=" + id + ", author=" + author + ", resolver=" + resolver + ", description="
 				+ description + ", type=" + type + ", status=" + status + ", amount=" + amount + "]";
@@ -130,11 +82,11 @@ public class Reimbursement {
 		this.status = status;
 	}
 
-	public Double getAmount() {
+	public double getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Double amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 

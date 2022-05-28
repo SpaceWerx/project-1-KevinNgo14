@@ -11,8 +11,9 @@ import repositories.ReimbursementDAO;
 
 public class reimbursementService {
 	
-	static ReimbursementDAO rDAO = new ReimbursementDAO();
-	userService uService = new userService();
+	 static ReimbursementDAO rDAO = new ReimbursementDAO();
+	 static userService uService = new userService();
+	//public static ArrayList<Reimbursement> reimbursements = new ArrayList<>();
 	
 	public static List<Reimbursement> getPendingReimbursement()
 	{
@@ -32,38 +33,41 @@ public class reimbursementService {
 	
 	public static int submitReimbursement(Reimbursement reimbursementToBeSubmitted) 
 	{
-		User employee = userService.getUserById(reimbursementToBeSubmitted.getAuthor());
+		User employee = uService.getUserById(reimbursementToBeSubmitted.getAuthor());
 		
-		if(employee.getRole() != Role.EMPLOYEE) 
-		{
-			throw new IllegalArgumentException("Managers can not submit reimbursement requests.");
-			
-		}
-		else 
-		{
+//		if(employee.getRole() != Role.EMPLOYEE) 
+//		{
+//			throw new IllegalArgumentException("Managers can not submit reimbursement requests.");
+//			
+//		}
+//		else 
+//		{
 			reimbursementToBeSubmitted.setStatus(Status.PENDING);
 			
 			return rDAO.create(reimbursementToBeSubmitted);
-		}
+	
 	}
 	
-	public static Reimbursement update(Reimbursement unprocessedReimbursement, int resolverID, Status updatedStatus) 
+	public static Reimbursement update(Reimbursement unprocessedReimbursement) 
 	{
-		User manager = userService.getUserById(resolverID);
+//		User manager = userService.getUserById(resolverID);
 		
-		if(manager.getRole() != Role.MANAGER) 
-		{
-			throw new IllegalArgumentException("An employee can not process reimbursement requests.");
-		}
-		else 
-		{
-			unprocessedReimbursement.setResolver(resolverID);
-			unprocessedReimbursement.setStatus(updatedStatus);
-			
-			rDAO.update(unprocessedReimbursement);
-			
-			return unprocessedReimbursement;
-		}
+//		if(manager.getRole() != Role.MANAGER) 
+//		{
+//			throw new IllegalArgumentException("An employee can not process reimbursement requests.");
+//		}
+//		else 
+//		{
+//			unprocessedReimbursement.setResolver(resolverID);
+//			unprocessedReimbursement.setStatus(status);
+//			
+//			rDAO.update(unprocessedReimbursement);
+//			
+//			return unprocessedReimbursement;
+//		}
+		rDAO.update(unprocessedReimbursement);
+		
+		return unprocessedReimbursement;
 	}
 	
 	public static Reimbursement getReimbursementById(int id) 
@@ -76,6 +80,10 @@ public class reimbursementService {
 		return rDAO.getReimbursementsByUser(userId);
 	}
 	
+	public static List<Reimbursement> getReimbursementByStatus(Status status)
+	{
+		return rDAO.getByStatus(status);
+	}
 	
 
 }

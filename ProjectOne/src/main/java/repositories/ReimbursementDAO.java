@@ -1,6 +1,7 @@
 package repositories;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,7 +19,7 @@ public class ReimbursementDAO {
 	{
 		try(Connection connection = ConnectionFactoryUtility.getConnection())
 		{
-			String sql = "UPDATE ers_reimbursement SET resolver = ?, status = ?::status WHERE id = ?";
+			String sql = "UPDATE ers_reimbursements SET resolver = ?, status = ?::status WHERE id = ?";
 			
 			PreparedStatement prepStatement = connection.prepareStatement(sql);
 			
@@ -42,7 +43,7 @@ public class ReimbursementDAO {
 	{
 		try(Connection connection = ConnectionFactoryUtility.getConnection())
 		{
-			String sql = "SELECT * FROM ers_reimbursement WHERE author = ?";
+			String sql = "SELECT * FROM ers_reimbursements WHERE author = ?";
 			
 			PreparedStatement prepStatement = connection.prepareStatement(sql);
 			
@@ -78,7 +79,7 @@ public class ReimbursementDAO {
 	{
 		try(Connection connection = ConnectionFactoryUtility.getConnection())
 		{
-			String sql = "SELECT * FROM ers_reimbursement WHERE id = ?";
+			String sql = "SELECT * FROM ers_reimbursements WHERE id = ?";
 			
 			PreparedStatement prepStatement = connection.prepareStatement(sql);
 			
@@ -110,9 +111,11 @@ public class ReimbursementDAO {
 	
 	public List<Reimbursement> getByStatus(Status status)
 	{
+//		
+		
 		try(Connection connection = ConnectionFactoryUtility.getConnection())
 		{
-			String sql = "SELECT * FROM ers_reimbursement WHERE status = ?::status";
+			String sql = "SELECT * FROM ers_reimbursements WHERE status = ?::status";
 			
 			PreparedStatement prepStatement = connection.prepareStatement(sql);
 			
@@ -120,7 +123,7 @@ public class ReimbursementDAO {
 			
 			ResultSet rs = prepStatement.executeQuery();
 			
-			List<Reimbursement> reimbursements = new ArrayList<Reimbursement>();
+			List<Reimbursement> reimbursements = new ArrayList<>();
 			
 			while(rs.next()) 
 			{
@@ -149,9 +152,9 @@ public class ReimbursementDAO {
 	{
 		try(Connection connection = ConnectionFactoryUtility.getConnection())
 		{
-			List<Reimbursement> reimbursements = new ArrayList<Reimbursement>();
+			List<Reimbursement> reimbursements = new ArrayList<>();
 			
-			String sql = "SELECT * from ers_reimbursement";
+			String sql = "SELECT * from ers_reimbursements";
 			
 			Statement statement = connection.createStatement();
 			
@@ -184,8 +187,8 @@ public class ReimbursementDAO {
 	{
 		try(Connection connection = ConnectionFactoryUtility.getConnection())
 		{
-			String sql = "INSERT INTO ers_reimbursement(author,description,type,status,amount)"
-			+ "VALUES(?, ?, ?::type, ?::status,?)"
+			String sql = "INSERT INTO ers_reimbursements(author,description,type,status,amount)"
+			+ "VALUES (?,?,?::type,?::status,?)"
 			+ "RETURNING ers_reimbursements.id";
 			
 			PreparedStatement prepStatement = connection.prepareStatement(sql);

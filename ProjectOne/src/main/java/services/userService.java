@@ -1,5 +1,6 @@
 package services;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,9 +12,9 @@ public class userService {
 	
 	static UserDAO uDAO = new UserDAO();
 	
-	public static User getUserById(int author) 
+	public static User getUserById(int id) 
 	{
-		return (User) uDAO.getUserById(author);
+		return uDAO.getUserById(id);
 	}
 	
 	@SuppressWarnings("static-access")
@@ -52,5 +53,14 @@ public class userService {
 			}
 		}
 		return roles;
-	}	
+	}
+
+	public void addUser(User newEmployee) throws SQLException {
+		
+		UserDAO.createUser(newEmployee);
+	}
+
+	public static boolean checkUserExistsById(int id) {
+		return false;
+	}
 }

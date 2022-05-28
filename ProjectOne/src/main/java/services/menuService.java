@@ -3,6 +3,7 @@ package services;
 
 
 import java.util.List;
+
 import java.util.Scanner;
 import Models.Reimbursement;
 import Models.Role;
@@ -11,8 +12,10 @@ import Models.User;
 import Models.reimbursementType;
 
 public class menuService {
-	reimbursementService rServ = new reimbursementService();
+	static reimbursementService rServ = new reimbursementService();
 	static Scanner scan = new Scanner(System.in);
+	userService uServ = new userService();
+	
 	
 	@SuppressWarnings("static-access")
 	public void displayLogInMenu() 
@@ -30,7 +33,7 @@ public class menuService {
 		       String username = scan.nextLine();
 		       System.out.println("Enter your password");
 		       String password = scan.nextLine();
-		       if (au.login(username, password)!= null) {
+		       if (au.login(username, password)!= 0) {
 		           accountFound = true;
 		           displayMenu();
 		           break;
@@ -273,8 +276,8 @@ public class menuService {
 				}
 			}
 		}
-		reimbursementService.submitReimbursement(reimbursementToBeSubmitted);
-		scan.close();
+		rServ.submitReimbursement(reimbursementToBeSubmitted);
+		//scan.close();
 		
 	}
 	
@@ -325,7 +328,7 @@ public class menuService {
 				
 				int decision = promptSelection(1,2);
 				Status status = (decision == 1)? Status.APPROVED : Status.DENIED;
-				rServ.update(reimbursementToBeProcessed, MANAGER.getUser_ID(), status);
+				rServ.update(reimbursementToBeProcessed);
 		
 			
 				System.out.println("Would you like to process another reimbursement?");
@@ -368,7 +371,7 @@ public class menuService {
 		{
 			return;
 		}
-		User employee = userService.getUserById(userChoice);
+		User employee = uServ.getUserById(userChoice);
 		
 		if(role == Role.MANAGER) 
 		{

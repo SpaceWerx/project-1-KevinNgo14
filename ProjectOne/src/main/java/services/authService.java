@@ -1,33 +1,32 @@
 package services;
 
+import Models.Role;
 import Models.User;
 
 import repositories.UserDAO;
 
 public class authService {
 	//@SuppressWarnings("static-access")
-	public static User login(String username, String password) 
-	{
-		User user;
-		//UserDAO ud = new UserDAO();
-		
+	UserDAO ud = new UserDAO();
+	public static int login(String username, String password) 
+	{		
 		try 
 		{
-			user = UserDAO.getUserByUserName(username);
-			if(user!=null && password.equals(user.getPassWord())) 
+			User user = UserDAO.getUserByUserName(username);
+			if(user!=null && password.equals(user.getPassWord()) && user.getRole()== Role.MANAGER) 
 			{
-				System.out.println("Logged in Successfully");
-				return user;
+				System.out.println(" Manager logged in Successfully");
+				return 1;
 			}
-			else if(user!=null && !password.equals(user.getPassWord())) 
+			else if(user!=null && password.equals(user.getPassWord()) && user.getRole()== Role.EMPLOYEE) 
 			{
-				System.out.println("Incorrect password");
-				return null;
+				System.out.println("Employee logged in");
+				return 2;
 			}
 			else 
 			{
 				System.out.println("User does not exist");
-				return null;
+				return 0;
 			}
 			
 		}
@@ -36,7 +35,7 @@ public class authService {
 			System.out.println("Log in unsuccessful");
 			e.printStackTrace();
 		}
-		return null;
+		return 0;
 	}
 	public static int register(User userToBeRegistered) 
 	{
