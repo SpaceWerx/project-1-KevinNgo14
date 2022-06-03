@@ -1,4 +1,4 @@
-document.getElementById("submit-button").addEventListener("submit",registerFunction);
+document.getElementById("submit-button").addEventListener("click",registerFunction);
 
 async function registerFunction()
 {

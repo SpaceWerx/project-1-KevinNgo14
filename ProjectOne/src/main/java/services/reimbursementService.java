@@ -48,26 +48,24 @@ public class reimbursementService {
 	
 	}
 	
-	public static Reimbursement update(Reimbursement unprocessedReimbursement) 
+	public static Reimbursement update(Reimbursement unprocessedReimbursement,int resolver , Status status) 
 	{
-//		User manager = userService.getUserById(resolverID);
+		User manager = userService.getUserById(resolver);
 		
-//		if(manager.getRole() != Role.MANAGER) 
-//		{
-//			throw new IllegalArgumentException("An employee can not process reimbursement requests.");
-//		}
-//		else 
-//		{
-//			unprocessedReimbursement.setResolver(resolverID);
-//			unprocessedReimbursement.setStatus(status);
-//			
-//			rDAO.update(unprocessedReimbursement);
-//			
-//			return unprocessedReimbursement;
-//		}
-		rDAO.update(unprocessedReimbursement);
+		if(manager.getRole() != Role.MANAGER) 
+		{
+			throw new IllegalArgumentException("An employee can not process reimbursement requests.");
+		}
+		else 
+		{
+			unprocessedReimbursement.setResolver(resolver);
+			unprocessedReimbursement.setStatus(status);
+			
+			rDAO.update(unprocessedReimbursement);
+			
+			return unprocessedReimbursement;
+		}
 		
-		return unprocessedReimbursement;
 	}
 	
 	public static Reimbursement getReimbursementById(int id) 

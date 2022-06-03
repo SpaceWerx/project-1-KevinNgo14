@@ -27,10 +27,10 @@ public class ReimbursementController {
 		String body = ctx.body();
         Gson gson = new Gson();
         Reimbursement reimbursement = gson.fromJson(body, Reimbursement.class);
-        reimbursementService.update(reimbursement);
+        reimbursement.setAuthor(AuthController.CurrentUser);
         String JSONObject = gson.toJson("Reimbursement processed successfully!");
         ctx.result(JSONObject);
-        ctx.status(208);
+        ctx.status(201);
 
         int id = reimbursementService.submitReimbursement(reimbursement);
 
@@ -76,51 +76,66 @@ public class ReimbursementController {
 	
 	public Handler handleProcess=(ctx)-> 
 	{
-		String authHeader = ctx.header("Current User");
+		String body = ctx.body();
+		Gson gson = new Gson();
 		
-		if(authHeader != null) 
-		{
-			int userId = Integer.parseInt(authHeader);
-			
-			try 
-			{
-				String reimbursementIdInput = ctx.pathParam("id");
-				
-				int id = Integer.parseInt(reimbursementIdInput);
-				
-				String statusInput = ctx.formParam("status");
-				
-				Reimbursement reimbursement = reimbursementService.getReimbursementById(id);
-				
-				if(reimbursement != null) 
-				{
-					Reimbursement processedReimbursement = reimbursementService.update(reimbursement);
-					
-					ctx.status(HttpCode.ACCEPTED);
-					ctx.json(processedReimbursement);
-				}
-				else 
-				{
-					ctx.status(HttpCode.BAD_REQUEST);
-					ctx.result("Reimbursement processing was not successful");
-				}
-			}
-			catch(Exception e)
-			{
-				ctx.status(HttpCode.INTERNAL_SERVER_ERROR);
-				
-				if(!e.getMessage().isEmpty()) 
-				{
-					ctx.result(e.getMessage());
-				}
-				e.printStackTrace();
-			}
+		Reimbursement reimbursement = gson.fromJson(body, Reimbursement.class);
+		int remiID = reimbursement.getId();
+		int id = AuthController.CurrentUser;
+		Status statusInput = reimbursement.getStatus();
+		reimbursement = rDAO.getReimbursementById(remiID);
+		Reimbursement processedReimbursement = rc.update(reimbursement, id, statusInput);
+		if(processedReimbursement!=null) {
+			ctx.status(201);
+			ctx.result("reimbursement was updated");
+		}else {
+			ctx.status(400);
 		}
-		else 
-		{
-			ctx.status(HttpCode.FORBIDDEN);
-			ctx.result("Missing Current User Header with ID");
-		}
+//		String authHeader = ctx.header("Current User");
+//		
+//		if(authHeader != null) 
+//		{
+//			int userId = Integer.parseInt(authHeader);
+//			
+//			try 
+//			{
+//				String reimbursementIdInput = ctx.pathParam("id");
+//				
+//				int id = Integer.parseInt(reimbursementIdInput);
+//				
+//				String statusInput = ctx.formParam("status");
+//				
+//				Reimbursement reimbursement = reimbursementService.getReimbursementById(id);
+//				
+//				if(reimbursement != null) 
+//				{
+//					Reimbursement processedReimbursement = reimbursementService.update(reimbursement,userId,id);
+//					
+//					ctx.status(HttpCode.ACCEPTED);
+//					ctx.json(processedReimbursement);
+//				}
+//				else 
+//				{
+//					ctx.status(HttpCode.BAD_REQUEST);
+//					ctx.result("Reimbursement processing was not successful");
+//				}
+//			}
+//			catch(Exception e)
+//			{
+//				ctx.status(HttpCode.INTERNAL_SERVER_ERROR);
+//				
+//				if(!e.getMessage().isEmpty()) 
+//				{
+//					ctx.result(e.getMessage());
+//				}
+//				e.printStackTrace();
+//			}
+//		}
+//		else 
+//		{
+//			ctx.status(HttpCode.FORBIDDEN);
+//			ctx.result("Missing Current User Header with ID");
+//		}
 	};
 	
 	
@@ -257,9 +272,11 @@ public class ReimbursementController {
 		String body = ctx.body();
 		Gson gson = new Gson();
 		Reimbursement reimbursement = gson.fromJson(body, Reimbursement.class);
-		int id = reimbursement.getResolver();
-		
-		Reimbursement proccessedReim = rc.update(reimbursement);
+		int reimid = reimbursement.getId();
+		int id = AuthController.CurrentUser;
+		Status statusInput = reimbursement.getStatus();
+		reimbursement = rDAO.getReimbursementById(reimid);	
+		Reimbursement proccessedReim = rc.update(reimbursement,id,statusInput);
 		if(proccessedReim !=null) 
 		{
 			ctx.status(HttpCode.ACCEPTED);

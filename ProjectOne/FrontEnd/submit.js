@@ -1,5 +1,5 @@
 document.getElementById("logout-anchor").addEventListener("click", logout);
-document.getElementById("submit-button").addEventListener("submit", attemptSubmit);
+document.getElementById("submit-button").addEventListener("click", attemptSubmit);
 
 async function logout()
 {
@@ -21,14 +21,15 @@ async function attemptSubmit()
     let reim = 
     {
         "id" : 0,
-        "author": 0,
-        "resolver": 0,
+        "author": 1,
+        "resolver": 1,
         "description": desc,
         "type" : types,
         "status" : testStatus,
         "amount": amounts
 
     }
+    console.log(reim);
 
     let response = await fetch("http://localhost:5000/submit",{
         method: "POST",
@@ -36,7 +37,7 @@ async function attemptSubmit()
         credentials: "include"
     });
 
-    console.log(response);
+    console.log(response.status);
 
 
 }
