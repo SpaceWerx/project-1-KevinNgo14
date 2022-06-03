@@ -8,25 +8,25 @@ import repositories.UserDAO;
 public class authService {
 	//@SuppressWarnings("static-access")
 	UserDAO ud = new UserDAO();
-	public static int login(String username, String password) 
+	public static User login(String username, String password) 
 	{		
 		try 
 		{
 			User user = UserDAO.getUserByUserName(username);
 			if(user!=null && password.equals(user.getPassWord()) && user.getRole()== Role.MANAGER) 
 			{
-				System.out.println(" Manager logged in Successfully");
-				return 1;
+				System.out.println("Manager logged in Successfully");
+				return user;
 			}
 			else if(user!=null && password.equals(user.getPassWord()) && user.getRole()== Role.EMPLOYEE) 
 			{
 				System.out.println("Employee logged in");
-				return 2;
+				return user;
 			}
 			else 
 			{
 				System.out.println("User does not exist");
-				return 0;
+				return null;
 			}
 			
 		}
@@ -35,7 +35,7 @@ public class authService {
 			System.out.println("Log in unsuccessful");
 			e.printStackTrace();
 		}
-		return 0;
+		return null;
 	}
 	public static int register(User userToBeRegistered) 
 	{

@@ -5,35 +5,50 @@ import java.util.Objects;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
+import Models.Role;
 import Models.User;
 import io.javalin.http.Handler;
 import io.javalin.http.HttpCode;
+import repositories.UserDAO;
 import services.authService;
 
 public class AuthController
 {
 	authService as = new authService();
+	User currentUser;
+	public static int CurrentUser;
 	public Handler handleLogin =(ctx) -> 
 	{
 		String body = ctx.body();
 		Gson gson = new Gson();
 		User user = gson.fromJson(body, User.class);
-		int login = as.login(user.getUserName(), user.getPassWord());
+		currentUser = UserDAO.getUserByUserName(user.getUserName());
+
+		if(currentUser != null)
+		{ 		
+			ctx.sessionAttribute("currentUser",currentUser.getUser_ID());
 		
-		if(login == 1)
-		{
-			ctx.status(HttpCode.ACCEPTED);
-			ctx.result("Managed succesful log in");
+			CurrentUser = ctx.sessionAttribute("currentUser");
 		}
-		else if(login == 2 ) 
+		if(as.login(user.getUserName(), user.getPassWord()) != null) 
 		{
-			ctx.status(HttpCode.ACCEPTED);
-			ctx.result("Employee succesful log in");
-		}
-		else 
-		{
-			ctx.status(HttpCode.BAD_REQUEST);
-			ctx.result("Invalid Credentials");
+			if(currentUser.getRole() == Role.EMPLOYEE) 
+			{
+				ctx.status(202);
+				ctx.result("Log in sucessful");
+				System.out.println("Employee");
+			}
+			else if(currentUser.getRole() == Role.MANAGER) 
+			{
+				ctx.status(201);
+				ctx.result("Log in successful");
+				System.out.println("Manager");
+			}
+			else 
+			{
+				ctx.status(HttpCode.BAD_REQUEST);
+				ctx.result("Invalid Credentials");
+			}
 		}
 	};
 	

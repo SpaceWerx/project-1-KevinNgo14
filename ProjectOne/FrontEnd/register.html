@@ -32,14 +32,26 @@
         <div id = "bg">
 			<img src = "../FrontEnd/main-background.jpg" alt="tech background">
 		</div>
-        <div>
-            <div id="registerRow" class = "row">
-                <input id="username" type="username" placeholder="Username">
-                <input id="password" type="password" placeholder="Password">
-                <button type="submit" id="submit-button" class = "btn btn-outline-primary">Submit</button>
-
+        <form id = "display-form">
+            <div>
+                <div id="registerRow" class = "row">
+                    <input id="username" type="username" placeholder="Username">
+                    <input id="password" type="password" placeholder="Password">
+                    <select class = "form-select" id = "Role">
+                        <option selected> Choose...</option>
+                        <option value="EMPLOYEE"> Employee</option>
+                        <option value="MANAGER"> Manager</option>
+                    </select>
+                    <button type="submit" id="submit-button" class = "btn btn-outline-primary">Submit</button>
+                    <button type = "button" id="loginButton" class="btn btn-outline-primary">
+                        <a id = "login-anchor" href = "../FrontEnd/login.html">
+                            Login
+                        </a>
+                    </button>
+                </div>
             </div>
-        </div>
+            
+        </form>
     </div>
     <script src="register.js"></script>
 </body>

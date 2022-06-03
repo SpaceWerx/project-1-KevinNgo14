@@ -35,19 +35,24 @@
         <div>
             <div id="loginRow" class="row">
                 <h3>Please Login</h3>
-                <input id="username" placeholder="Username">
-                <input id="password" type="password" placeholder="Password">
-                <button id="loginButton" class="btn btn-primary col-sm-2">Login</button>
-                <button id="registerButton" class="btn btn-primary col-sm-2"> 
-                    <a id="logout-anchor" href="../FrontEnd/register.html">
-                        Register
-                    </a>
-                </button>
+                <form id = "display-form">
+                    <input class = "form-control" id="username" placeholder="Username">
+                    <input id="password" type="password" placeholder="Password">
+                    <button type = "button" id="loginButton" class="btn btn-primary">
+                        <a id = "login-anchor">
+                            Login
+                        </a>
+                    </button>
+                    <button type ="button" id="registerButton" class="btn btn-primary"> 
+                        <a id="logout-anchor" href="../FrontEnd/register.html">
+                            Register
+                        </a>
+                    </button>
+                </form>
+                <br>
+                <br>
+                <br>
             </div>
-                <br>
-                <br>
-                <br>
-        </div>
     </div>
     <script src="login.js"></script>
 </body>

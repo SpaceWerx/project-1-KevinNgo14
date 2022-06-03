@@ -148,7 +148,7 @@ public class ReimbursementController {
 	{
 			String statusParam = ctx.body();
 			
-			Models.Status status = Models.Status.valueOf(statusParam);
+			Status status = Status.valueOf(statusParam);
 			List<Reimbursement> reim = reimbursementService.getReimbursementByStatus(status);
 			Gson gson = new Gson();
 			String json = gson.toJson(reim);
@@ -181,14 +181,16 @@ public class ReimbursementController {
 	{
 		try 
 		{
-			String idParam = ctx.pathParam("id");
-			
-			int id = Integer.parseInt(idParam);
-			
+//			String idParam = ctx.pathParam("id");
+			int id = Integer.parseInt(ctx.pathParam("id"));
 			Reimbursement reimbursement = reimbursementService.getReimbursementById(id);
+			
+			Gson gson = new Gson();
+			String JSONObject = gson.toJson(reimbursement);
 			
 			if(reimbursement != null) 
 			{
+				ctx.result(JSONObject);
 				ctx.status(HttpCode.OK);
 				ctx.json(reimbursement);
 			}

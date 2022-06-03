@@ -1,7 +1,7 @@
 html,
 body,
 header,
-#main
+#main1
 {
     height:auto;
 }
@@ -28,7 +28,17 @@ header,
     width: 100%;
     height: 100%;
 }
-#registerButton
+#display-buttons
 {
-    background-color: white;
+    text-align: center;
+    padding-bottom: 10px;
+}
+#logout-anchor
+{
+    text-decoration: none;
+    color:green;
+}
+#logout-anchor:hover
+{
+    color:white;
 }

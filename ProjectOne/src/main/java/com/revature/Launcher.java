@@ -39,10 +39,10 @@ public class Launcher {
 				config -> {
 					config.enableCorsForAllOrigins(); //This is what allows the server to process JS
 				}	
-					).start(4000);
+					).start(5000);
 			
 		//Endpoint
-			app.get("/employee", uc.getEmployeesHandler);
+			app.get("/seeAll", uc.getEmployeesHandler);
 			
 			//register
 			app.post("/employee", uc.insertEmployeesHandler);
@@ -56,7 +56,8 @@ public class Launcher {
 			app.get("/reimbursement", rc.handleGetReimbursements);
 			//app.put approve or deny reimbursement near identical . send ID of reimbursement, leave blank
 			//make separet approve and deny. Send it to approve, hard code approve
-			app.get("/reim", rc.handleGetReimbursements);
+			app.get("/reim/{id}", rc.handleGetReimbursementById);
+			app.get("/status", rc.handleGetReimbursementByStatus);
 			
 			app.put("/approve", rc.handleApproved);
 			//app.put("/denied", rc.handleDenied);
