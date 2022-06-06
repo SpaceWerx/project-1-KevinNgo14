@@ -169,3 +169,57 @@ Once you've navigated to the website, you should see the following:
 * Choose the installer that is compatible with your system. Once you've clicked the installer of your choice, you'll be prompted to save the file. Do so.
 * Double click the installer. Once you've done so, the installer should be launched. Accept the license agreement and proceed until you reach a menu titled "Select Additional Tasks". Once you've arrived here, be sure to check all of the boxes that are checked in the image
 ![image](https://user-images.githubusercontent.com/65207041/172040178-53d135b9-0322-4ff1-98c5-eb2f7f1bfed1.png)
+
+## Usage
+After installing my project, you will need to create a databse connection in DBeaver and Requests in Postman
+### Creating a database connection in DBeaver
+* Launch DBeaver. Click on the Database tab and there will be an option to create a new database connection
+![data1](https://user-images.githubusercontent.com/65207041/172084024-a6d17592-c0fb-4e7b-b00a-bef6a15614e6.PNG)
+* A pop up will appear. Select PostgreSQL
+![data2](https://user-images.githubusercontent.com/65207041/172084133-9a169da1-1a78-4af7-8f50-f201d4d83e75.PNG)
+* After clicking next, it will display connection settings.
+![data3](https://user-images.githubusercontent.com/65207041/172084279-f64d535f-e1e9-4acf-a3f4-3dfd3679b42e.PNG)
+* In the host field, copy and paste the following end point: javafullstackaws.ceboc7nfkw4e.us-east-1.rds.amazonaws.com
+* Additionally in the Authentication setting, input the correct username and password of the RDS(Which in this case should be postgress and password)
+* Click on finish.
+### Creating a new schema in DBeaver
+With the database connected created, you'll have to make a schema next. Go to your newly created database, click on database and the drop down arrow. 
+![data4](https://user-images.githubusercontent.com/65207041/172095727-dd4acb51-d80b-4073-aa38-433bf7631ff7.PNG)
+* Right click and hover over Create. Select Schema.
+![data5](https://user-images.githubusercontent.com/65207041/172095874-3128603e-b435-4f05-9c62-3e31c15ea73f.PNG)
+* For this project, name this schema p1schema
+If there is no active connection
+![data6](https://user-images.githubusercontent.com/65207041/172096391-c6256f1e-2728-4e0f-b763-8d3366d534e6.PNG)
+Click on the Select data source button and select your database you're using
+![data7](https://user-images.githubusercontent.com/65207041/172096559-47c394f5-7f19-4bba-a0e4-ec1de79c73fa.PNG)
+Another way of doing is this is opening the schema folder in database navigator, right clicking the schema you want to work in, and select the option "set as default"
+
+### Creating requests in Postman
+In order for the front end to interact with the back end and our database, we'll be using requests and Javascript. 
+* Launch Postman. Navigate to File and select New and choose New workspace
+![data8](https://user-images.githubusercontent.com/65207041/172097488-a4c724b4-573f-4a97-ae37-ccca9b219968.PNG)
+* Name your new creation and right click to add a folder (I named it P1)
+![data9](https://user-images.githubusercontent.com/65207041/172097583-f04bb480-5c10-4458-8488-a79298295402.PNG)
+* Now with in P1 folder, repeat the process and make folders for User and Reimbursement
+* Right click on the User folder and click on the option to add a request. There are different types of request we will be using
+![data10](https://user-images.githubusercontent.com/65207041/172097829-027c893a-6f6b-4fb7-b2fe-a807fe2fdb07.PNG)
+* In order for the requests to go through, there are several parts you are required to fill out
+* Change the request by selecting the drop down menu on the left. Then input the end point. This is presented in the launcher file, so copy and paste.
+* Next click on body and change the option to raw. Each request has a different set of arguments passed in order to function.
+* Change the raw option to JSON. The following images below show how each requests are set up and the arguments passed.
+![image](https://user-images.githubusercontent.com/65207041/172097931-6811da9f-1807-4d36-92ec-f8ddf7833dae.png)
+![data12](https://user-images.githubusercontent.com/65207041/172098381-79a5c457-2ce6-49da-9f34-2acd2925e29a.PNG)
+![data13](https://user-images.githubusercontent.com/65207041/172098420-ec4c0772-4b4c-46f2-8b3f-a82d1b5619c7.PNG)
+![data14](https://user-images.githubusercontent.com/65207041/172098434-97de3c5d-ae14-45d5-be78-5e9c1052d40b.PNG)
+![data15](https://user-images.githubusercontent.com/65207041/172098469-616705a1-0baa-4e80-976f-948ca4ceaf37.PNG)
+![data16](https://user-images.githubusercontent.com/65207041/172098484-0ebd46ca-ab47-4951-a76a-b49f210abd32.PNG)
+![data17](https://user-images.githubusercontent.com/65207041/172098501-365e54e1-ce2e-4687-abae-29b626abaf1b.PNG)
+![data18](https://user-images.githubusercontent.com/65207041/172098518-16a65166-b60a-4a16-850e-bd12021368cc.PNG)
+
+### Launching front end funtionality
+Now with all that set up, we can now interact with my project! Launch STS and open the project. Click on run and there will be message in the console to notify that you are connected to Javalin. 
+Next, open Visual studio and open the front end folder. Start with login.html and hit the F5 button to run it.
+
+## Licenses
+* license:	postgresql
+* license: 	apache-2.0
